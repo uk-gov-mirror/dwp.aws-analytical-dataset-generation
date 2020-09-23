@@ -34,6 +34,7 @@ def get_parameters():
     )
     # Parse command line inputs and set defaults
     parser.add_argument("--correlation_id", default="0")
+    parser.add_argument("--s3_prefix", default="businessdata/mongo/ucdata")
     return parser.parse_args()
 
 
@@ -340,7 +341,7 @@ if __name__ == "__main__":
     run_time_stamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     published_database_name = "${published_db}"
     s3_htme_bucket = os.getenv("S3_HTME_BUCKET")
-    s3_prefix = "${s3_prefix}"
+    s3_prefix = args.s3_prefix
     s3_publish_bucket = os.getenv("S3_PUBLISH_BUCKET")
     s3_client = get_client("s3")
     secrets_response = retrieve_secrets()
