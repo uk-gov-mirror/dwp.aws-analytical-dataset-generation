@@ -16,6 +16,7 @@ resource "aws_s3_bucket_object" "emr_setup_sh" {
       S3_COMMON_LOGGING_SHELL         = format("s3://%s/%s", data.terraform_remote_state.common.outputs.config_bucket.id, data.terraform_remote_state.common.outputs.application_logging_common_file.s3_id)
       S3_LOGGING_SHELL                = format("s3://%s/%s", data.terraform_remote_state.common.outputs.config_bucket.id, aws_s3_bucket_object.logging_script.key)
       S3_SEND_SNS_NOTIFICATION        = format("s3://%s/%s", data.terraform_remote_state.common.outputs.config_bucket.id, aws_s3_bucket_object.send_notification_script.key)
+      HARDWARE_UTILISATION            = format("s3://%s/%s", data.terraform_remote_state.common.outputs.config_bucket.id, aws_s3_bucket_object.utilisation_metrics.key)
       aws_default_region              = "eu-west-2"
       full_proxy                      = data.terraform_remote_state.internal_compute.outputs.internet_proxy.url
       full_no_proxy                   = local.no_proxy
@@ -87,6 +88,17 @@ resource "aws_s3_bucket_object" "cloudwatch_sh" {
   content = templatefile("${path.module}/bootstrap_actions/cloudwatch.sh",
     {
       emr_release = var.emr_release[local.environment]
+    }
+  )
+}
+
+resource "aws_s3_bucket_object" "utilisation_metrics" {
+  bucket = data.terraform_remote_state.common.outputs.config_bucket.id
+  key    = "component/analytical-dataset-generation/utilisation-metrics.sh"
+  content = templatefile("${path.module}/bootstrap_actions/utilisation-metrics.sh",
+    {
+      app_name   = "adg"
+      sleep_time = "3"
     }
   )
 }

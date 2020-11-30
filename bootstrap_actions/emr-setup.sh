@@ -15,12 +15,14 @@ aws s3 cp "${S3_COMMON_LOGGING_SHELL}"        /opt/shared/common_logging.sh
 aws s3 cp "${S3_LOGGING_SHELL}"               /opt/emr/logging.sh
 aws s3 cp "${S3_CLOUDWATCH_SHELL}"            /opt/emr/cloudwatch.sh
 aws s3 cp "${S3_SEND_SNS_NOTIFICATION}"       /opt/emr/send_notification.py
+aws s3 cp "${HARDWARE_UTILISATION}"           /opt/emr/hardware_utilisation.sh
 
 echo "Changing the Permissions"
 chmod u+x /opt/shared/common_logging.sh
 chmod u+x /opt/emr/logging.sh
 chmod u+x /opt/emr/cloudwatch.sh
 chmod u+x /opt/emr/send_notification.py
+chmod u+x /opt/emr/hardware_utilisation.sh
 
 (
 # Import the logging functions
@@ -52,6 +54,8 @@ sudo /opt/emr/cloudwatch.sh \
     "${cwa_metrics_collection_interval}" "${cwa_namespace}"  "${cwa_log_group_name}" \
     "${aws_default_region}" "${cwa_bootstrap_loggrp_name}" "${cwa_steps_loggrp_name}" \
     "${cwa_yarnspark_loggrp_name}"
+
+sudo /opt/emr/hardware_utilisation.sh
 
 export ACM_KEY_PASSWORD=$(uuidgen -r)
 
