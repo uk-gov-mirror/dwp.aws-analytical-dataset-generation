@@ -6,6 +6,13 @@ else
     export namespace_prefix="nodes"
 fi
 METRICS_FILEPATH="/opt/emr/metrics/"
+
+touch $METRICS_FILEPATH$${1}_$${namespace_prefix}_free_memory.csv
+touch $METRICS_FILEPATH$${1}_$${namespace_prefix}_cpu_utilisation.csv
+touch $METRICS_FILEPATH$${1}_$${namespace_prefix}_free_disk.csv
+touch $METRICS_FILEPATH$${1}_$${namespace_prefix}_received_bytes.csv
+touch $METRICS_FILEPATH$${1}_$${namespace_prefix}_transferred_bytes.csv
+
 send_loop()
 {
     while :
